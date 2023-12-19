@@ -23,7 +23,7 @@ else
   curl -fsSL https://bun.sh/install | bash
 fi
 
-BUN_VERSION="--canary"
+BUN_VERSION="--stable"
 
 if [ -f "$BUILD_DIR"/.bun-version ]; then
   BUN_VERSION=$(cat "$BUILD_DIR"/.bun-version)
