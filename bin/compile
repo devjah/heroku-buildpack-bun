@@ -19,21 +19,21 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 if [ -f "$BUN_INSTALL"/bin/bun ]; then
   echo "------> Bun $(bun --version) is already installed"
-else
-  curl -fsSL https://bun.sh/install | bash
-fi
-
-# Check if BUN_VERSION is already set, otherwise use default value
-if [ -z "${BUN_VERSION-}" ]; then
-  if [ -f "$BUILD_DIR"/.bun-version ]; then
-    BUN_VERSION=$(cat "$BUILD_DIR"/.bun-version)
-  else
-    # BUN_VERSION="--stable"
-    BUN_VERSION="1.0.18"
+  
+  # Check if BUN_VERSION is already set, otherwise use default value
+  if [ -z "${BUN_VERSION-}" ]; then
+    if [ -f "$BUILD_DIR"/.bun-version ]; then
+      BUN_VERSION=$(cat "$BUILD_DIR"/.bun-version)
+    else
+      # BUN_VERSION="--stable"
+      BUN_VERSION="1.0.18"
+    fi
   fi
-fi
 
-bun upgrade "$BUN_VERSION"
+  bun upgrade "$BUN_VERSION"
+else
+  curl -fsSL https://bun.sh/install | bash -s "bun-v1.0.18"
+fi
 
 
 cat <<EOT >"$BUILD_DIR"/.bunfig.toml
