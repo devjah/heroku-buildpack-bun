@@ -5,7 +5,7 @@
 # fail fast
 set -eu -o pipefail
 
-BUILD_DIR=${1:-.}
+BUILD_DIR=${1:-}
 CACHE_DIR=${2:-}
 LP_DIR=$(
   cd "$(dirname "$0")"
@@ -19,10 +19,12 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # Check if BUN_VERSION is already set, otherwise use default value
 if [ -f "$BUILD_DIR"/.bun-version ]; then
+  echo "Trying to get BUN_VERSION from $BUILD_DIR/.bun-version file"
   BUN_VERSION=$(cat "$BUILD_DIR"/.bun-version)
 else
   BUN_VERSION="--stable"
 fi
+echo "------> BUN_VERSION = $BUN_VERSION"
 
 if [ -f "$BUN_INSTALL"/bin/bun ]; then
   echo "------> Bun $(bun --version) is already installed"
