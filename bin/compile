@@ -23,10 +23,13 @@ else
   curl -fsSL https://bun.sh/install | bash
 fi
 
-BUN_VERSION="--stable"
-
-if [ -f "$BUILD_DIR"/.bun-version ]; then
-  BUN_VERSION=$(cat "$BUILD_DIR"/.bun-version)
+# Check if BUN_VERSION is already set, otherwise use default value
+if [ -z "${BUN_VERSION-}" ]; then
+  if [ -f "$BUILD_DIR"/.bun-version ]; then
+    BUN_VERSION=$(cat "$BUILD_DIR"/.bun-version)
+  else
+    BUN_VERSION="--stable"
+  fi
 fi
 
 bun upgrade "$BUN_VERSION"
