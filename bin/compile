@@ -28,7 +28,7 @@ echo "------> BUN_VERSION = $BUN_VERSION"
 
 # Check if bun is already installed
 if [ -f "$BUN_INSTALL"/bin/bun ]; then
-  INSTALLED_VERSION=$(bun --version | awk '{print $2}')
+  INSTALLED_VERSION=$(bun --version)
   echo "------> Bun $INSTALLED_VERSION is already installed"
 
   # Compare installed version with desired version
