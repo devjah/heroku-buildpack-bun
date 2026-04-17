@@ -60,7 +60,7 @@ EOT
 
 # download dependencies
 cd "$BUILD_DIR"
-bun install
+bun install --ignore-scripts
 
 # give environment to later buildpacks
 export | grep -E -e ' (PATH)=' >"$LP_DIR/export"
