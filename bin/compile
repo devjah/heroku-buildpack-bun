@@ -26,6 +26,14 @@ else
 fi
 echo "------> BUN_VERSION = $BUN_VERSION"
 
+install_bun() {
+  # Wipe any cached binary so the installer lays down a clean copy.
+  # `bun upgrade <version>` is not a supported command, so we always
+  # (re)install via the official script when the version changes.
+  rm -rf "$BUN_INSTALL"
+  curl -fsSL https://bun.sh/install | bash -s "bun-v$BUN_VERSION"
+}
+
 # Check if bun is already installed
 if [ -f "$BUN_INSTALL"/bin/bun ]; then
   INSTALLED_VERSION=$(bun --version)
@@ -33,14 +41,14 @@ if [ -f "$BUN_INSTALL"/bin/bun ]; then
 
   # Compare installed version with desired version
   if [ "$INSTALLED_VERSION" != "$BUN_VERSION" ]; then
-    echo "Will upgrade bun to $BUN_VERSION"
-    bun upgrade "$BUN_VERSION"
+    echo "Reinstalling bun: $INSTALLED_VERSION -> $BUN_VERSION"
+    install_bun
   else
     echo "Bun is already at the desired version $BUN_VERSION"
   fi
 else
   echo "Bun is not installed. Installing version $BUN_VERSION"
-  curl -fsSL https://bun.sh/install | bash -s "bun-v$BUN_VERSION"
+  install_bun
 fi
 
 
