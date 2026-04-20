@@ -7,6 +7,7 @@ set -eu -o pipefail
 
 BUILD_DIR=${1:-}
 CACHE_DIR=${2:-}
+ENV_DIR=${3:-}
 LP_DIR=$(
   cd "$(dirname "$0")"
   cd ..
@@ -17,8 +18,16 @@ LP_DIR=$(
 export BUN_INSTALL=$CACHE_DIR/bun
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-# Check if BUN_VERSION is already set, otherwise use default value
-if [ -f "$BUILD_DIR"/.bun-version ]; then
+# Resolve BUN_VERSION. Precedence:
+#   1. BUN_VERSION config var (Heroku passes config vars as files in $ENV_DIR)
+#   2. .bun-version file in the repo
+#   3. --stable
+# The env var wins so you can flip versions per-app (e.g. to test a new bun
+# on one app) without committing a code change.
+if [ -n "$ENV_DIR" ] && [ -f "$ENV_DIR/BUN_VERSION" ]; then
+  echo "Getting BUN_VERSION from BUN_VERSION config var"
+  BUN_VERSION=$(cat "$ENV_DIR/BUN_VERSION")
+elif [ -f "$BUILD_DIR"/.bun-version ]; then
   echo "Trying to get BUN_VERSION from $BUILD_DIR/.bun-version file"
   BUN_VERSION=$(cat "$BUILD_DIR"/.bun-version)
 else
